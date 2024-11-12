@@ -10,10 +10,9 @@ struct WeekInfo: Codable {
     func isCurrentWeek() -> Bool {
         let calendar = Calendar.current
         let today = Date()
-        var components = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today)
-        components.weekday = 2
-        let currentWeekStart = calendar.date(from: components)!
-        return calendar.isDate(startDate, equalTo: currentWeekStart, toGranularity: .day)
+        
+        // 시작일과 종료일 사이에 현재 날짜가 있는지 확인
+        return today >= startDate && today < endDate
     }
 }
 
