@@ -28,6 +28,21 @@ extension UserDefaults {
     static let groupIdentifier = "group.com.wonji.WeeklyBudget"
     static let shared = UserDefaults(suiteName: groupIdentifier)!
     
+    static func saveWeekInfo(_ weekInfo: WeekInfo) {
+            if let encoded = try? JSONEncoder().encode(weekInfo) {
+                shared.set(encoded, forKey: "currentWeekInfo")
+            }
+        }
+        
+        static func loadWeekInfo() -> WeekInfo? {
+            guard let data = shared.data(forKey: "currentWeekInfo"),
+                  let weekInfo = try? JSONDecoder().decode(WeekInfo.self, from: data)
+            else {
+                return nil
+            }
+            return weekInfo
+        }
+    
     static func saveExpenses(_ expenses: [Expense]) {
         if let encoded = try? JSONEncoder().encode(expenses) {
             shared.set(encoded, forKey: "expenses")
@@ -102,4 +117,5 @@ extension UserDefaults {
         shared.set(todayRemainingBudget, forKey: "todayRemainingBudget")
         WidgetCenter.shared.reloadAllTimelines()
     }
+    
 }
