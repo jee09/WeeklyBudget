@@ -55,12 +55,14 @@ struct ExpenseTrackingView: View {
             lastCalculatedDate = Date()
             
             // 위젯 업데이트
-            // 오늘의 새로운 시작이므로 todaySpent는 0으로 시작
             UserDefaults.updateWidget(
                 remainingBudget: remainingBudget,
-                dailyAvailable: weekInfo.dailyBudget,  // 고정된 일일 예산
+                dailyAvailable: weekInfo.dailyBudget,
                 todayRemainingBudget: weekInfo.dailyBudget  // 새로운 날의 시작이므로 전체 일일 예산
             )
+            
+            // 위젯 갱신 요청
+            WidgetCenter.shared.reloadAllTimelines()
         }
     }
     
@@ -96,11 +98,14 @@ struct ExpenseTrackingView: View {
     // MARK: - Helper Methods
     private func saveExpenses() {
         UserDefaults.saveExpenses(expenses)
+        // 지출 데이터가 변경될 때마다 위젯 업데이트
         UserDefaults.updateWidget(
             remainingBudget: remainingBudget,
-            dailyAvailable: currentDailyBudget,
+            dailyAvailable: weekInfo.dailyBudget,
             todayRemainingBudget: todayRemaining
         )
+        // 위젯 갱신 요청
+        WidgetCenter.shared.reloadAllTimelines()
     }
     
     private func updateExpense(_ updatedExpense: Expense) {
