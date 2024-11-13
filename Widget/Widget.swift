@@ -8,6 +8,7 @@
 import WidgetKit
 import SwiftUI
 
+
 struct Provider: TimelineProvider {
     typealias Entry = BudgetEntry
     let groupIdentifier = "group.com.wonji.WeeklyBudget"
@@ -27,8 +28,6 @@ struct Provider: TimelineProvider {
         let remainingBudget = userDefaults?.double(forKey: "remainingBudget") ?? 0
         let dailyAvailable = userDefaults?.double(forKey: "dailyAvailable") ?? 0
         let todayRemainingBudget = userDefaults?.double(forKey: "todayRemainingBudget") ?? 0
-        
-        print("위젯 - remainingBudget: \(remainingBudget), dailyAvailable: \(dailyAvailable), todayRemaining: \(todayRemainingBudget)")
         
         let entry = BudgetEntry(
             date: Date(),
@@ -53,8 +52,9 @@ struct Provider: TimelineProvider {
             todayRemainingBudget: todayRemainingBudget
         )
         
-        let midnight = Calendar.current.startOfDay(for: Date()).addingTimeInterval(24 * 60 * 60)
-        let timeline = Timeline(entries: [entry], policy: .after(midnight))
+        // 다음 자정까지 유지 (앱에서 데이터 변경 시 위젯이 갱신됨)
+        let nextMidnight = Calendar.current.startOfDay(for: Date()).addingTimeInterval(24 * 60 * 60)
+        let timeline = Timeline(entries: [entry], policy: .after(nextMidnight))
         completion(timeline)
     }
 }
